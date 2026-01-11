@@ -1,0 +1,8 @@
+id,name,expiry,condition,price,timestamp,image,status
+7317590fdc2e7da4,Montecip LC,2027-11-11,unopened,200,2025-04-26T10:15:13.158Z,ee6bfa95142f04fa89ee27a7e47cee86.webp,approved
+5a3d9b11696d9f21,Allegra,2026-12-20,unopened,150,2025-04-26T10:16:35.976Z,dade05aabd9bb10fca301e515f65b399.webp,approved
+c447b96809afc2d4,combiflam,2028-12-09,partially_used,150,2025-04-26T10:21:53.045Z,b964a22cf200d18f28f1e4c5b22c7fb7.webp,rejected
+324b93a1a71d1ff1,Disprin,2027-11-11,unopened,200,2025-04-27T09:09:17.006Z,138c0d538c372735d661baacb6a66ca6.jpg,approved
+ea7c76d1382ea703,asparin,2026-11-11,unopened,0,2025-04-28T10:36:37.281Z,4bbd450d972cb6cbe96eb1eea4bf8f0c.webp,approved
+5b2a445e975786bf,asparin,2027-11-23,unopened,0,2025-04-29T04:05:24.996Z,b49bee400afa84a69a7d919fc78c35ce.webp,approved
+77cb07581a8551dc,Dolo,2026-05-23,opened_unused,200,2025-04-29T14:56:30.392Z,9ddee6ead3a84622137a6553e7f8de55.jpeg,approved

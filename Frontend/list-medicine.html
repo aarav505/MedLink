@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Medicine </title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        header .logo span {
+            color: white;
+        }
+
+        header nav a {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        header nav a:hover {
+            color: white;
+        }
+
+        main {
+            padding: 4rem 0;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background: white;
+            color: var(--secondary-color);
+            border: none;
+            border-radius: 0.5rem;
+            width: 100%;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--secondary-color);
+        }
+
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+            background: transparent;
+            margin-top: 2rem;
+            padding: 1.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="logo.png" alt="MedLink Logo">
+                    <span>MedLink</span>
+                </a>
+                <nav>
+                    <a href="index.html">Home</a>
+                    <a href="how-it-works.html">How it Works</a>
+                    <a href="team.html">Team</a>
+                    <a href="contact.html">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>List Your Medicine</h1>
+        
+        <div class="form-container">
+            <form id="medicineForm">
+                <div class="form-group">
+                    <label for="medicineName">Medicine Name</label>
+                    <input type="text" id="medicineName" name="medicineName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="expiryDate">Expiry Date</label>
+                    <input type="date" id="expiryDate" name="expiryDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="medicineImage">Medicine Image</label>
+                    <input type="file" id="medicineImage" name="medicineImage" accept="image/*">
+                </div>
+                
+                <div class="form-group">
+                    <label for="condition">Condition</label>
+                    <select id="condition" name="condition" required>
+                        <option value="">Select condition</option>
+                        <option value="unopened">Unopened</option>
+                        <option value="opened_unused">Opened but unused</option> 
+                        <option value="partially_used">Partially used</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price (INR, Optional)</label>
+                    <input type="number" id="price" name="price" min="0" step="0.01" placeholder="Leave blank if donating for free">
+                </div>
+
+                <button type="submit">List Medicine</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        &copy; <script>document.write(new Date().getFullYear())</script> MedLink
+    </footer>
+
+    <script>
+        document.getElementById('medicineForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            // Note: File uploads usually require more complex handling 
+            // than just adding to CSV directly. This assumes a backend 
+            // will process the FormData including the file.
+            
+            // Add timestamp client-side if needed, although backend might do this
+            formData.append('timestamp', new Date().toISOString());
+            
+            // Convert specific fields to CSV for potential logging or simple backend
+             const data = Object.fromEntries(formData.entries());
+             const csvRow = [
+                 data.medicineName,
+                 data.expiryDate,
+                 data.condition,
+                 data.price || '0', // Include price, default to 0 if blank
+                 data.timestamp 
+                 // Image name could be added: data.medicineImage.name 
+             ].map(value => value ? `"${String(value).replace(/"/g, '""')}"` : '""').join(',');
+            
+             console.log("CSV Row Prepared (Image not included):", csvRow);
+
+            // Append to CSV file - Requires a backend endpoint that can handle multipart/form-data
+            fetch('/Data/listings.csv', { // Endpoint needs adjustment if saving image
+                method: 'POST',
+                body: formData // Send the whole FormData including the file
+                // Headers are set automatically for FormData by fetch
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Check if response indicates success (e.g., JSON response)
+                    return response.text(); // Or response.json() if backend sends JSON
+                } else {
+                     // Try to get error message from backend if possible
+                    return response.text().then(text => { 
+                        throw new Error(text || 'Failed to save medicine listing. Status: ' + response.status);
+                    });
+                }
+            })
+             .then(responseText => {
+                 console.log("Backend Response:", responseText);
+                 alert('Medicine listed successfully!');
+                 this.reset();
+             })
+            .catch(error => {
+                 console.error('Error saving listing:', error);
+                 alert('Error: ' + error.message);
+            });
+        });
+    </script>
+</body>
+</html> 

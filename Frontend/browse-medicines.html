@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Medicines - MedLink</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #f6fafd;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding-bottom: 0.5rem;
+        }
+        header .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .logo span {
+            color: #222;
+        }
+        nav a {
+            color: #222;
+            font-weight: 500;
+            margin-left: 1.5rem;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        nav a:hover {
+            color: var(--primary-color);
+        }
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .account-btn {
+            background: #42a5f5;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            border-radius: 16px;
+            padding: 0.5rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            transition: background 0.2s;
+        }
+        .account-btn:hover {
+            background: #2196f3;
+        }
+        .user-icon {
+            color: #fff;
+        }
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            font-size: 1rem;
+            color: #222;
+        }
+        .user-info .profile-link {
+            color: #673ab7;
+            text-decoration: underline;
+            font-size: 1rem;
+            margin-top: 0.2rem;
+        }
+        .user-info .profile-link:hover {
+            color: #512da8;
+        }
+        .logout-btn {
+            background: #fff;
+            color: #222;
+            border: 1px solid #bdbdbd;
+            border-radius: 6px;
+            padding: 0.2rem 0.7rem;
+            font-size: 1rem;
+            margin-left: 0.5rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .logout-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .main-wrapper {
+            margin: 2.5rem auto 0 auto;
+            max-width: 1100px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            padding: 2.5rem 1.5rem 2rem 1.5rem;
+            min-height: 70vh;
+        }
+
+        main {
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        /* FILTERS SECTION - MATCH REFERENCE IMAGE */
+        .filters-section {
+            background: linear-gradient(120deg, #42a5f5 0%, #26c6da 100%);
+            border-radius: 16px;
+            padding: 2rem 2.5rem 1.5rem 2.5rem;
+            margin-bottom: 2rem;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+        }
+        .filters-title {
+            color: #fff;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+        .filters-row {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 1.5rem;
+            align-items: flex-end;
+        }
+        .filter-group {
+            flex: 1;
+            min-width: 180px;
+            display: flex;
+            flex-direction: column;
+        }
+        .filter-label {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .filter-input, .filter-select {
+            color: #fff;
+            background: transparent;
+            border: 1.5px solid #fff;
+            border-radius: 8px;
+            padding: 0.7rem 1rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+        .filter-input:focus, .filter-select:focus {
+            border-color: #b2ebf2;
+        }
+        .filter-input::placeholder {
+            color: #e0f7fa;
+            opacity: 1;
+        }
+        .filter-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .filter-btn {
+            background: transparent;
+            color: #fff;
+            border: 1.5px solid #fff;
+            border-radius: 8px;
+            padding: 0.7rem 1.5rem;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: background 0.2s, color 0.2s;
+        }
+        .filter-btn:hover {
+            background: #fff;
+            color: #26c6da;
+        }
+        .reset-filters {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border: 1.5px solid #fff;
+        }
+        .reset-filters:hover {
+            background: #fff;
+            color: #42a5f5;
+        }
+        @media (max-width: 900px) {
+            .filters-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .filter-actions {
+                flex-direction: row;
+                justify-content: flex-end;
+            }
+        }
+
+        .medicines-grid {
+            background: transparent;
+        }
+        .medicine-card {
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+        }
+
+        footer {
+            border-top: 1px solid #e5e7eb;
+            color: #64748b;
+            font-size: 0.8rem;
+            background: #fff;
+            margin-top: 2rem;
+            padding: 1.5rem 0;
+        }
+
+        /* Card Grid Layout */
+        .medicines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+            background: transparent;
+        }
+
+        .medicine-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            position: relative;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .medicine-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+        }
+
+        .card-image {
+            height: 180px;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .medicine-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-info {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-price {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-top: 1rem;
+        }
+
+        .free-tag {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--secondary-color);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+        }
+
+        /* Details Modal */
+        .medicine-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal-details {
+            background: white;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            color: #64748b;
+            cursor: pointer;
+            z-index: 2;
+            background: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .modal-image {
+            height: 300px;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            position: relative;
+        }
+
+        .modal-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #e5e7eb;
+        }
+
+        .modal-image img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            padding: 0.5rem;
+        }
+
+        .modal-content {
+            padding: 2rem;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 1rem;
+        }
+
+        .modal-details-list {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            margin-bottom: 0.75rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            width: 120px;
+            color: #64748b;
+        }
+
+        .detail-value {
+            flex: 1;
+            color: var(--dark-text);
+        }
+
+        .modal-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .request-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            flex: 1;
+        }
+
+        .request-btn:hover {
+            background: #0c8dca;
+        }
+
+        .contact-btn {
+            background: white;
+            color: var(--dark-text);
+            border: 1px solid #d1d5db;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .contact-btn:hover {
+            background: #f3f4f6;
+            border-color: #9ca3af;
+        }
+
+        /* Order Form Styles */
+        .order-form {
+            display: none;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .order-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-text);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .submit-order-btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+
+        .submit-order-btn:hover {
+            background: #0d7a6f;
+        }
+
+        .add-medicine-btn {
+            background: var(--secondary-color);
+            color: white;
+            margin-left: auto;
+        }
+        
+        .add-medicine-btn:hover {
+            background: #0d7a6f;
+        }
+        
+        .form-buttons {
+            margin-top: 1.5rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.2em 0.7em;
+            border-radius: 0.5em;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 0.5em;
+            margin-right: 0.5em;
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+        .status-approved { background: #d1fae5; color: #065f46; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-rejected { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="Logo.png" alt="MedLink Logo">
+                    <span>MedLink</span>
+                </a>
+                <nav>
+                    <a href="index.html">Home</a>
+                    <a href="how-it-works.html">How it Works</a>
+                    <a href="team.html">Team</a>
+                    <a href="contact.html">Contact</a>
+                </nav>
+                <div class="user-menu">
+                    <div class="account-btn" id="accountBtn" style="display: none;">
+                        <span class="user-name" id="userName">Login</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="user-icon">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="account-dropdown" id="accountDropdown" style="display: none;">
+                        <div class="dropdown-header" id="dropdownUserInfo">
+                            <p>Welcome</p>
+                            <p class="dropdown-phone">+91 XXXXXXXXXX</p>
+                        </div>
+                        <div class="dropdown-actions">
+                            <a href="profile.html" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                My Profile
+                            </a>
+                            <button id="logoutBtn" class="dropdown-item danger">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                    <div class="user-info" id="userInfo" style="display: none; flex-direction: column; align-items: flex-start;">
+                        <span id="welcomeText">Welcome</span>
+                        <span id="userPhone">+91 XXXXXXXXXX</span>
+                        <a href="profile.html" class="profile-link">My Profile</a>
+                        <button class="logout-btn" id="logoutBtn2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-wrapper">
+        <main class="container">
+            <h1>Browse Available Medicines</h1>
+            
+            <div class="filters-section">
+                <div class="filters-title">Filter Medicines</div>
+                <div class="filters-row">
+                    <div class="filter-group">
+                        <label class="filter-label" for="search">Search</label>
+                        <input type="text" id="search" class="filter-input" placeholder="Medicine name...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label" for="condition">Condition</label>
+                        <select id="condition" class="filter-select">
+                            <option value="">All Conditions</option>
+                            <option value="unopened">Unopened</option>
+                            <option value="opened_unused">Opened but unused</option>
+                            <option value="partially_used">Partially used</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label" for="price">Price</label>
+                        <select id="price" class="filter-select">
+                            <option value="">Any Price</option>
+                            <option value="free">Free</option>
+                            <option value="paid">Paid</option>
+                        </select>
+                    </div>
+                    <div class="filter-actions">
+                        <button id="resetFilters" class="filter-btn reset-filters">Reset Filters</button>
+                        <button id="applyFilters" class="filter-btn">Apply Filters</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="medicines-grid" id="medicinesGrid">
+                <!-- Medicine cards will be loaded here by JavaScript -->
+                <div class="loading-message">Loading medicines...</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Medicine Details Modal -->
+    <div id="medicineModal" class="medicine-modal">
+        <div class="modal-details">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div class="modal-image" id="modalImage">
+                <img src="placeholder-medicine.jpg" alt="Medicine Image">
+            </div>
+            <div class="modal-content">
+                <h2 class="modal-title" id="modalTitle">Medicine Name</h2>
+                <div class="modal-details-list">
+                    <div class="detail-item">
+                        <div class="detail-label">Expiry Date</div>
+                        <div class="detail-value" id="modalExpiry">01/01/2025</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Condition</div>
+                        <div class="detail-value" id="modalCondition">Unopened</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Listed On</div>
+                        <div class="detail-value" id="modalTimestamp">April 24, 2024</div>
+                    </div>
+                </div>
+                <div class="modal-price" id="modalPrice">Free</div>
+                <div class="modal-actions">
+                    <button class="request-btn" id="modalRequestBtn">Request Medicine</button>
+                    <button class="contact-btn">Contact Donor</button>
+                </div>
+                <div class="order-form" id="orderForm">
+                    <h3>Place Your Order</h3>
+                    <form id="orderDetailsForm">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Delivery Address</label>
+                            <textarea id="address" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Additional Notes (Optional)</label>
+                            <textarea id="message"></textarea>
+                        </div>
+                        <button type="submit" class="submit-order-btn">Submit Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            &copy; <script>document.write(new Date().getFullYear())</script> MedLink
+        </div>
+    </footer>
+
+    <script>
+        // Global variables
+        let allMedicines = [];
+        let currentMedicine = null;
+        const medicineModal = document.getElementById('medicineModal');
+        const medicinesGrid = document.getElementById('medicinesGrid');
+        
+        // Load medicines from API
+        async function loadMedicines() {
+            console.log('Loading medicines from API...');
+            
+            try {
+                // Fetch from our backend API
+                const response = await fetch('/api/medicines');
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                
+                const medicines = await response.json();
+                console.log('Fetched medicines:', medicines);
+                
+                if (medicines.length === 0) {
+                    showNoMedicinesMessage();
+                } else {
+                    allMedicines = medicines;
+                    displayMedicines(medicines);
+                }
+            } catch (error) {
+                console.error('Error fetching medicines:', error);
+                showNoMedicinesMessage();
+            }
+        }
+        
+        // Display medicines in grid
+        function displayMedicines(medicines) {
+            if (!medicines || medicines.length === 0) {
+                medicinesGrid.innerHTML = `
+                    <div class="no-results">
+                        <p>No medicines found matching your criteria.</p>
+                        <button class="filter-btn" onclick="resetFilters()">Reset Filters</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            medicinesGrid.innerHTML = medicines.map(medicine => {
+                console.log('Medicine data:', medicine); // Debug log
+                
+                // Make sure we're accessing the image field correctly
+                return `
+                <div class="medicine-card" onclick="showMedicineDetails('${medicine.name}')">
+                    ${medicine.price === '0' ? '<span class="free-tag">Free</span>' : ''}
+                    <div class="card-image">
+                        <img src="${medicine.image || `https://placehold.co/400x300/f8f9fa/64748b?text=${encodeURIComponent(medicine.name)}`}" 
+                             alt="${medicine.name}" 
+                             onerror="this.src='https://placehold.co/400x300/f8f9fa/64748b?text=${encodeURIComponent(medicine.name)}'; this.onerror=null;">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${medicine.name}</h3>
+                        <span class="status-badge status-${medicine.status || 'unknown'}">${medicine.status ? medicine.status.charAt(0).toUpperCase() + medicine.status.slice(1) : 'Unknown'}</span>
+                        <p class="card-info"><strong>Expires:</strong> ${formatDate(medicine.expiry)}</p>
+                        <p class="card-info"><strong>Condition:</strong> ${formatCondition(medicine.condition)}</p>
+                        <div class="card-price">${formatPrice(medicine.price)}</div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+        
+        // Show medicine details in modal
+        function showMedicineDetails(medicineName) {
+            currentMedicine = allMedicines.find(med => med.name === medicineName);
+            if (!currentMedicine) return;
+            
+            console.log("Opening modal for medicine:", currentMedicine);
+            
+            // Populate modal with medicine details
+            document.getElementById('modalTitle').textContent = currentMedicine.name;
+            document.getElementById('modalExpiry').textContent = formatDate(currentMedicine.expiry);
+            document.getElementById('modalCondition').textContent = formatCondition(currentMedicine.condition);
+            document.getElementById('modalTimestamp').textContent = formatDate(currentMedicine.timestamp);
+            document.getElementById('modalPrice').textContent = formatPrice(currentMedicine.price);
+            
+            // Update image in modal
+            const modalImage = document.getElementById('modalImage');
+            modalImage.innerHTML = `
+                <img src="${currentMedicine.image || `https://placehold.co/600x400/f8f9fa/64748b?text=${encodeURIComponent(currentMedicine.name)}`}" 
+                     alt="${currentMedicine.name}" 
+                     onerror="this.src='https://placehold.co/600x400/f8f9fa/64748b?text=${encodeURIComponent(currentMedicine.name)}'; this.onerror=null;">
+            `;
+            
+            // Show modal
+            medicineModal.style.display = 'flex';
+            document.getElementById('orderForm').classList.remove('active');
+
+            // Add status to modal
+            const modalContent = document.querySelector('.modal-content');
+            let statusElem = document.getElementById('modalStatus');
+            if (!statusElem) {
+                statusElem = document.createElement('div');
+                statusElem.id = 'modalStatus';
+                statusElem.style.marginTop = '0.5rem';
+                statusElem.style.fontWeight = 'bold';
+                modalContent.insertBefore(statusElem, document.getElementById('modalPrice'));
+            }
+            statusElem.innerHTML = `<span class="status-badge status-${currentMedicine.status || 'unknown'}">Status: ${currentMedicine.status ? currentMedicine.status.charAt(0).toUpperCase() + currentMedicine.status.slice(1) : 'Unknown'}</span>`;
+        }
+        
+        // Close the modal
+        function closeModal() {
+            medicineModal.style.display = 'none';
+            currentMedicine = null;
+        }
+        
+        // Apply filters to medicines
+        function applyFilters() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const conditionFilter = document.getElementById('condition').value;
+            const priceFilter = document.getElementById('price').value;
+            
+            let filtered = allMedicines;
+            
+            // Apply search filter
+            if (searchTerm) {
+                filtered = filtered.filter(med => 
+                    med.name.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Apply condition filter
+            if (conditionFilter) {
+                filtered = filtered.filter(med => med.condition === conditionFilter);
+            }
+            
+            // Apply price filter
+            if (priceFilter) {
+                if (priceFilter === 'free') {
+                    filtered = filtered.filter(med => med.price === '0');
+                } else if (priceFilter === 'paid') {
+                    filtered = filtered.filter(med => med.price !== '0');
+                }
+            }
+            
+            // Display filtered medicines
+            displayMedicines(filtered);
+        }
+        
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('search').value = '';
+            document.getElementById('condition').value = '';
+            document.getElementById('price').value = '';
+            
+            // Show all medicines
+            displayMedicines(allMedicines);
+        }
+        
+        // Helper function to format date
+        function formatDate(dateString) {
+            if (!dateString) return 'Unknown';
+            
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            } catch (e) {
+                return 'Invalid Date';
+            }
+        }
+        
+        // Helper function to format condition
+        function formatCondition(condition) {
+            if (!condition) return 'Unknown';
+            
+            return condition
+                .split('_')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        }
+        
+        // Helper function to format price
+        function formatPrice(price) {
+            if (!price || price === '0') {
+                return 'Free';
+            } else {
+                return `₹${price}`;
+            }
+        }
+
+        function showOrderForm() {
+            document.getElementById('orderForm').classList.add('active');
+        }
+
+        function contactDonor() {
+            alert('Contact information will be shared after order confirmation.');
+        }
+
+        document.getElementById('orderDetailsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!currentMedicine) return;
+
+            const orderDetails = {
+                medicine: currentMedicine.name,
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                message: document.getElementById('message').value,
+                price: currentMedicine.price
+            };
+
+            // In a real implementation, this would be sent to a server
+            console.log('Order Details:', orderDetails);
+            alert('Order placed successfully! We will contact you shortly.');
+            closeModal();
+        });
+        
+        // Show message when no medicines are available
+        function showNoMedicinesMessage() {
+            medicinesGrid.innerHTML = `
+                <div class="no-results">
+                    <p>No medicines are currently available for listing.</p>
+                    <p>You can add medicines by clicking "List a Medicine" on the home page.</p>
+                </div>
+            `;
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load medicines
+            loadMedicines();
+            
+            // Set up filter buttons
+            document.getElementById('applyFilters').addEventListener('click', applyFilters);
+            document.getElementById('resetFilters').addEventListener('click', resetFilters);
+            
+            // Add event listener for Enter key in search box
+            document.getElementById('search').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    applyFilters();
+                }
+            });
+            
+            // Attach event listener to ESC key for closing modal
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (medicineModal.style.display === 'flex') {
+                        closeModal();
+                    }
+                }
+            });
+        });
+
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out'
+        });
+
+        // User Menu Functionality (like other pages)
+        document.addEventListener('DOMContentLoaded', function() {
+            const accountBtn = document.getElementById('accountBtn');
+            const accountDropdown = document.getElementById('accountDropdown');
+            const userName = document.getElementById('userName');
+            const dropdownUserInfo = document.getElementById('dropdownUserInfo');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const userInfo = document.getElementById('userInfo');
+            const welcomeText = document.getElementById('welcomeText');
+            const userPhone = document.getElementById('userPhone');
+            const logoutBtn2 = document.getElementById('logoutBtn2');
+
+            function updateUserUI() {
+                const token = localStorage.getItem('medlinkToken');
+                const user = JSON.parse(localStorage.getItem('medlinkUser') || '{}');
+
+                if (token && user && user.phone) {
+                    // Show user info, hide login button and dropdown
+                    accountBtn.style.display = 'none';
+                    accountDropdown.style.display = 'none';
+                    userInfo.style.display = 'flex';
+                    welcomeText.textContent = `Welcome`;
+                    userPhone.textContent = `+91 ${user.phone}`;
+                } else {
+                    // Show login button, hide user info and dropdown
+                    accountBtn.style.display = 'flex';
+                    accountDropdown.style.display = 'none';
+                    userInfo.style.display = 'none';
+                    userName.textContent = 'Login';
+                }
+            }
+
+            // Login button click
+            accountBtn.addEventListener('click', function(e) {
+                const token = localStorage.getItem('medlinkToken');
+                if (!token) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                e.stopPropagation();
+                accountDropdown.style.display = accountDropdown.style.display === 'block' ? 'none' : 'block';
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!accountBtn.contains(e.target) && !accountDropdown.contains(e.target)) {
+                    accountDropdown.style.display = 'none';
+                }
+            });
+
+            // Handle logout (dropdown)
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    localStorage.removeItem('medlinkToken');
+                    localStorage.removeItem('medlinkUser');
+                    updateUserUI();
+                    window.location.href = 'index.html';
+                });
+            }
+            // Handle logout (user info)
+            if (logoutBtn2) {
+                logoutBtn2.addEventListener('click', function() {
+                    localStorage.removeItem('medlinkToken');
+                    localStorage.removeItem('medlinkUser');
+                    updateUserUI();
+                    window.location.href = 'index.html';
+                });
+            }
+
+            // Initial UI update
+            updateUserUI();
+        });
+    </script>
+</body>
+</html> 

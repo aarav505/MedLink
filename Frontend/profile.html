@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - MedLink</title>
+    <style>
+        :root {
+            --primary-color: #0ea5e9;
+            --secondary-color: #0d9488;
+            --accent-color: #059669;
+            --light-text: #f8fafc;
+            --dark-text: #1e293b;
+            --background-light: #ffffff;
+            --background-base: #f1f5f9;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background-base);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        header {
+            background: var(--background-light);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 2.5rem;
+            width: auto;
+        }
+
+        .logo span {
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: var(--dark-text);
+            letter-spacing: -0.025em;
+        }
+
+        nav {
+            display: flex;
+            gap: 1.8rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--dark-text);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--secondary-color);
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: var(--background-light);
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-header h1 {
+            font-size: 1.8rem;
+            color: var(--dark-text);
+        }
+
+        .edit-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .edit-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .profile-info {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .info-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .info-group label {
+            font-weight: 500;
+            color: var(--dark-text);
+        }
+
+        .info-group p {
+            color: #4b5563;
+        }
+
+        .info-group input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .save-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .save-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .account-btn {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+            color: var(--dark-text);
+        }
+
+        .user-name {
+            margin-right: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-text);
+        }
+
+        .user-icon {
+            color: var(--dark-text);
+        }
+
+        .login-btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            border: none;
+        }
+
+        .login-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .account-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 240px;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            overflow: hidden;
+            display: none;
+        }
+
+        .account-dropdown.active {
+            display: block;
+        }
+
+        .dropdown-header {
+            padding: 1rem;
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .dropdown-phone {
+            font-weight: 600;
+            margin-top: 0.25rem !important;
+        }
+
+        .dropdown-actions {
+            padding: 0.5rem 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--dark-text);
+            text-decoration: none;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f3f4f6;
+        }
+
+        .dropdown-item svg {
+            margin-right: 0.75rem;
+            color: var(--primary-color);
+        }
+
+        .dropdown-item.danger {
+            color: #ef4444;
+        }
+
+        .dropdown-item.danger svg {
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="Logo.png" alt="MedLink Logo">
+                    <span>MedLink</span>
+                </a>
+                <nav>
+                    <a href="how-it-works.html">How it Works</a>
+                    <a href="team.html">Team</a>
+                    <a href="contact.html">Contact</a>
+                </nav>
+                <div class="user-menu">
+                    <div class="account-btn" id="accountBtn">
+                        <span class="user-name" id="userName">Account</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="user-icon">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="account-dropdown" id="accountDropdown">
+                        <div class="dropdown-header" id="dropdownUserInfo">
+                            <p>Welcome</p>
+                            <p class="dropdown-phone">+91 XXXXXXXXXX</p>
+                        </div>
+                        <div class="dropdown-actions">
+                            <a href="profile.html" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                My Profile
+                            </a>
+                            <button id="logoutBtn" class="dropdown-item danger">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="profile-container">
+            <div class="profile-header">
+                <h1>My Profile</h1>
+                <button class="edit-btn" id="editProfileBtn">Edit Profile</button>
+            </div>
+            <div class="profile-info" id="profileInfo">
+                <div class="info-group">
+                    <label>Full Name</label>
+                    <p id="userFullName">Loading...</p>
+                </div>
+                <div class="info-group">
+                    <label>Phone Number</label>
+                    <p id="userPhone">Loading...</p>
+                </div>
+                <div class="info-group">
+                    <label>Email</label>
+                    <p id="userEmail">Loading...</p>
+                </div>
+                <div class="info-group">
+                    <label>Address</label>
+                    <p id="userAddress">Loading...</p>
+                </div>
+            </div>
+            <form id="editProfileForm" style="display: none;">
+                <div class="info-group">
+                    <label for="editFullName">Full Name</label>
+                    <input type="text" id="editFullName" required>
+                </div>
+                <div class="info-group">
+                    <label for="editPhone">Phone Number</label>
+                    <input type="tel" id="editPhone" required>
+                </div>
+                <div class="info-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail">
+                </div>
+                <div class="info-group">
+                    <label for="editAddress">Address</label>
+                    <input type="text" id="editAddress">
+                </div>
+                <button type="submit" class="save-btn">Save Changes</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('medlinkToken');
+            const user = JSON.parse(localStorage.getItem('medlinkUser') || '{}');
+            
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Update header UI
+            const userName = document.getElementById('userName');
+            const dropdownUserInfo = document.getElementById('dropdownUserInfo');
+            
+            if (userName) userName.textContent = user.name || 'Account';
+            if (dropdownUserInfo) {
+                dropdownUserInfo.innerHTML = `
+                    <p>Welcome, ${user.name || 'User'}</p>
+                    <p class="dropdown-phone">+91 ${user.phone}</p>
+                `;
+            }
+
+            // Load profile data
+            fetch('/api/user/profile', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch profile');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('userFullName').textContent = data.name || 'Not set';
+                document.getElementById('userPhone').textContent = '+91 ' + data.phone;
+                document.getElementById('userEmail').textContent = data.email || 'Not set';
+                document.getElementById('userAddress').textContent = data.address || 'Not set';
+
+                // Set form values
+                document.getElementById('editFullName').value = data.name || '';
+                document.getElementById('editPhone').value = data.phone || '';
+                document.getElementById('editEmail').value = data.email || '';
+                document.getElementById('editAddress').value = data.address || '';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to load profile data');
+            });
+
+            // Edit profile functionality
+            const editProfileBtn = document.getElementById('editProfileBtn');
+            const profileInfo = document.getElementById('profileInfo');
+            const editProfileForm = document.getElementById('editProfileForm');
+
+            editProfileBtn.addEventListener('click', function() {
+                profileInfo.style.display = 'none';
+                editProfileForm.style.display = 'block';
+                editProfileBtn.textContent = 'Cancel';
+                editProfileBtn.classList.add('danger');
+            });
+
+            editProfileForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const updatedData = {
+                    name: document.getElementById('editFullName').value,
+                    phone: document.getElementById('editPhone').value,
+                    email: document.getElementById('editEmail').value,
+                    address: document.getElementById('editAddress').value
+                };
+
+                fetch('/api/user/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(updatedData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to update profile');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Update displayed info
+                    document.getElementById('userFullName').textContent = data.name || 'Not set';
+                    document.getElementById('userPhone').textContent = '+91 ' + data.phone;
+                    document.getElementById('userEmail').textContent = data.email || 'Not set';
+                    document.getElementById('userAddress').textContent = data.address || 'Not set';
+
+                    // Update local storage
+                    localStorage.setItem('medlinkUser', JSON.stringify(data));
+
+                    // Switch back to view mode
+                    profileInfo.style.display = 'grid';
+                    editProfileForm.style.display = 'none';
+                    editProfileBtn.textContent = 'Edit Profile';
+                    editProfileBtn.classList.remove('danger');
+
+                    alert('Profile updated successfully!');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to update profile');
+                });
+            });
+
+            // Handle logout
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    localStorage.removeItem('medlinkToken');
+                    localStorage.removeItem('medlinkUser');
+                    window.location.href = 'index.html';
+                });
+            }
+
+            // Handle account dropdown
+            const accountBtn = document.getElementById('accountBtn');
+            const accountDropdown = document.getElementById('accountDropdown');
+
+            if (accountBtn) {
+                accountBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    accountDropdown.classList.toggle('active');
+                });
+            }
+
+            document.addEventListener('click', function(e) {
+                if (accountDropdown && accountDropdown.classList.contains('active') && !accountDropdown.contains(e.target)) {
+                    accountDropdown.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

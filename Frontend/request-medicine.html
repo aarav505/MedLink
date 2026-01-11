@@ -1,0 +1,242 @@
+/* Common Styles for MedLink Platform */
+
+/* Reset and Base Styles */
+:root {
+    --primary-color: #0ea5e9; /* Sky Blue */
+    --secondary-color: #0d9488; /* Teal */
+    --accent-color: #059669; /* Emerald */
+    --light-text: #f8fafc; /* Lighter White */
+    --dark-text: #1e293b;  /* Darker Gray/Blue */
+    --background-light: #ffffff;
+    --background-base: #f1f5f9; /* Light Gray */
+    --border-color: #e2e8f0; /* Lighter Border */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--background-base);
+    color: var(--dark-text);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1100px; /* Slightly wider container */
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Header Styles */
+header {
+    background: var(--background-light);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.8rem 0;
+    position: sticky; /* Keep header visible */
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+}
+
+.logo img {
+    height: 2.5rem; /* Adjust as needed */
+    width: auto;
+}
+
+.logo span {
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--dark-text);
+    letter-spacing: -0.025em;
+}
+
+/* Navigation Styles */
+nav {
+    display: flex;
+    gap: 1.8rem;
+    align-items: center;
+}
+
+nav a {
+    color: var(--dark-text);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+nav a:hover {
+    color: var(--secondary-color);
+}
+
+/* Generic Button Styles */
+.button {
+    display: inline-block;
+    padding: 0.65rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+    border: 1px solid transparent; /* Base border */
+    font-size: 0.95rem;
+    text-align: center;
+    text-decoration: none;
+    line-height: 1.4;
+}
+.button:active {
+     transform: scale(0.98);
+}
+
+/* Define primary/secondary variations if needed globally */
+.button.button-primary-alt {
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    border-color: var(--primary-color);
+}
+.button.button-primary-alt:hover {
+    background-color: #0b94d1; /* Slightly darker blue */
+    border-color: #0b94d1;
+}
+
+/* Footer Styles */
+footer {
+    background-color: var(--background-light);
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    padding: 1.5rem 0;
+    color: #6b7280; /* Gray text */
+    font-size: 0.85rem;
+    margin-top: 3rem;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+    align-items: center; /* Vertically center */
+    justify-content: center; /* Horizontally center */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Auto margin for centering */
+    padding: 25px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px; /* Max width */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    position: relative;
+}
+
+.modal-close-btn {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-close-btn:hover,
+.modal-close-btn:focus {
+    color: black;
+    text-decoration: none;
+}
+
+/* Animations and Movement */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animated-fadeInUp {
+  animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.animated-fadeIn {
+  animation: fadeIn 0.7s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.card, .medicine-card, .team-member, .listing-card {
+  transition: transform 0.25s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.25s;
+  will-change: transform, box-shadow;
+}
+.card:hover, .medicine-card:hover, .team-member:hover, .listing-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 8px 32px rgba(14, 165, 233, 0.18);
+}
+
+.btn, button {
+  transition: background 0.2s, color 0.2s, transform 0.18s;
+}
+.btn:hover, button:hover {
+  transform: scale(1.06);
+  filter: brightness(1.08);
+}
+
+/* Modal animation */
+#modal[style*="display: flex"] > div {
+  animation: fadeInUp 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Section fade-in for main content */
+section, main, .container {
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+  animation-delay: 0.2s;
+}
+
+/* Staggered animation for lists */
+.medicine-list > *, .team-grid > *, .listing-list > * {
+  opacity: 0;
+  animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+.medicine-list > *:nth-child(1) { animation-delay: 0.1s; }
+.medicine-list > *:nth-child(2) { animation-delay: 0.2s; }
+.medicine-list > *:nth-child(3) { animation-delay: 0.3s; }
+.medicine-list > *:nth-child(4) { animation-delay: 0.4s; }
+.medicine-list > *:nth-child(5) { animation-delay: 0.5s; }
+
+/* Responsive touch for cards */
+@media (hover: none) {
+  .card:active, .medicine-card:active, .team-member:active, .listing-card:active {
+    transform: scale(0.98);
+  }
+} 

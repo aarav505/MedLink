@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How MedLink Works - Medicine Donation Platform</title>
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Add AOS (Animate On Scroll) library -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <style>
+        :root {
+            --primary-color: #0ea5e9; /* Sky Blue */
+            --secondary-color: #0d9488; /* Teal */
+            --accent-color: #059669; /* Emerald */
+            --light-text: #f8fafc; /* Lighter White */
+            --dark-text: #1e293b;  /* Darker Gray/Blue */
+            --background-light: #ffffff;
+            --background-base: #f1f5f9; /* Light Gray */
+            --border-color: #e2e8f0; /* Lighter Border */
+            --purple: #6366f1; /* Purple for buttons */
+            --purple-hover: #4f46e5; /* Darker purple for hover */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background-light);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        /* Header Styles (reused from index) */
+        header {
+            background: var(--background-light);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.8rem 0;
+            position: sticky; /* Keep header visible */
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 2.5rem;
+            width: auto;
+        }
+
+        .logo span {
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: var(--dark-text);
+            letter-spacing: -0.025em;
+        }
+        
+        nav {
+            display: flex;
+            gap: 1.8rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--dark-text);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* User Menu Styles */
+        .user-menu {
+            position: relative;
+        }
+
+        .account-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .account-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .account-btn.login-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .account-btn.login-btn:hover {
+            background-color: #0c8dca;
+        }
+
+        .user-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .account-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .dropdown-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dropdown-header p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-header p:first-child {
+            font-weight: 500;
+            color: var(--dark-text);
+        }
+
+        .dropdown-phone {
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+
+        .dropdown-actions {
+            padding: 0.5rem 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--dark-text);
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .dropdown-item svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .dropdown-item.danger {
+            color: #ef4444;
+        }
+
+        .dropdown-item.danger:hover {
+            background-color: #fee2e2;
+        }
+
+        /* Page Specific Styles */
+        .hero-section {
+            text-align: center;
+            padding: 4rem 0 2rem;
+            background-color: var(--background-base);
+        }
+
+        .hero-section h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark-text);
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            color: #4b5563;
+        }
+
+        /* Process Steps */
+        .process-steps {
+            padding: 4rem 0;
+        }
+
+        .step-card {
+            display: flex;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .step-accent {
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+            margin-right: 2rem;
+            border-radius: 4px;
+        }
+
+        .step-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background-color: #EEF2FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 2rem;
+            flex-shrink: 0;
+        }
+
+        .step-icon i {
+            font-size: 1.8rem;
+            color: var(--purple);
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 0.8rem;
+        }
+
+        .step-description {
+            color: #4b5563;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box {
+            background-color: #EEF2FF;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            position: relative;
+        }
+
+        .info-box h3 {
+            color: var(--purple);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box p {
+            color: #4b5563;
+            font-size: 0.95rem;
+        }
+
+        /* Call To Action Section */
+        .cta-section {
+            text-align: center;
+            padding: 4rem 0;
+            background-color: var(--background-base);
+        }
+
+        .cta-section h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: #4b5563;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .button {
+            padding: 0.75rem 1.8rem;
+            font-size: 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .button-primary {
+            background-color: var(--purple);
+            color: white;
+            border: none;
+            box-shadow: 0 2px 5px rgba(99, 102, 241, 0.2);
+        }
+
+        .button-primary:hover {
+            background-color: var(--purple-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+        }
+
+        .button-secondary {
+            background-color: transparent;
+            color: var(--dark-text);
+            border: 1px solid var(--border-color);
+        }
+
+        .button-secondary:hover {
+            background-color: var(--background-base);
+            transform: translateY(-1px);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--background-light);
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            padding: 1.5rem 0;
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+
+        /* Animation Classes */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .step-card {
+                flex-direction: column;
+            }
+            
+            .step-accent {
+                display: none;
+            }
+            
+            .step-icon {
+                margin-bottom: 1rem;
+                margin-right: 0;
+            }
+            
+            .hero-section h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero-section p {
+                font-size: 1rem;
+            }
+            
+            .buttons-container {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="Logo.png" alt="MedLink Logo">
+                    <span>MedLink</span>
+                </a>
+                <nav>
+                    <a href="how-it-works.html">How it Works</a>
+                    <a href="team.html">Team</a>
+                    <a href="contact.html">Contact</a>
+                </nav>
+                <div class="user-menu">
+                    <div class="account-btn" id="accountBtn">
+                        <span class="user-name" id="userName">Login</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="user-icon">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="account-dropdown" id="accountDropdown">
+                        <div class="dropdown-header" id="dropdownUserInfo">
+                            <p>Welcome</p>
+                            <p class="dropdown-phone">+91 XXXXXXXXXX</p>
+                        </div>
+                        <div class="dropdown-actions">
+                            <a href="profile.html" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                My Profile
+                            </a>
+                            <button id="logoutBtn" class="dropdown-item danger">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="container">
+                <h1 data-aos="fade-up">How MedLink Works</h1>
+                <p data-aos="fade-up" data-aos-delay="100">Making medicine donation simple, safe, and accessible for everyone</p>
+            </div>
+        </section>
+        
+        <section class="process-steps container">
+            <!-- User Registration Step -->
+            <div class="step-card" data-aos="fade-up">
+                <div class="step-accent"></div>
+                <div class="step-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="step-content">
+                    <h2 class="step-title">User Registration & Verification</h2>
+                    <p class="step-description">Users register with email and phone number, receiving an OTP via SMS for two-factor authentication, ensuring safe transactions between users.</p>
+                    
+                    <div class="info-box" data-aos="fade-up" data-aos-delay="200">
+                        <h3>Security First:</h3>
+                        <p>Our two-factor authentication ensures that all user accounts are secure and verified, preventing fraud and establishing trust between donors and recipients.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Medicine Listing Step -->
+            <div class="step-card" data-aos="fade-up">
+                <div class="step-accent"></div>
+                <div class="step-icon">
+                    <i class="fas fa-pills"></i>
+                </div>
+                <div class="step-content">
+                    <h2 class="step-title">Medicine Listing & Verification</h2>
+                    <p class="step-description">Donors list medicines with images and expiry dates. A qualified pharmacist reviews each listing to verify safety before public display.</p>
+                    
+                    <div class="info-box" data-aos="fade-up" data-aos-delay="200">
+                        <h3>Quality Assurance:</h3>
+                        <p>Every medicine undergoes thorough verification by licensed pharmacists who check expiration dates, packaging integrity, and compliance with health regulations.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Medicine Ordering Step -->
+            <div class="step-card" data-aos="fade-up">
+                <div class="step-accent"></div>
+                <div class="step-icon">
+                    <i class="fas fa-shipping-fast"></i>
+                </div>
+                <div class="step-content">
+                    <h2 class="step-title">Medicine Ordering System</h2>
+                    <p class="step-description">Users search for needed medicines, view local availability, and place orders directly through our secure platform.</p>
+                    
+                    <div class="info-box" data-aos="fade-up" data-aos-delay="200">
+                        <h3>Simplified Access:</h3>
+                        <p>Our search engine helps users quickly find needed medicines in their locality, connecting donors with recipients efficiently through our secure platform.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Community Engagement Step -->
+            <div class="step-card" data-aos="fade-up">
+                <div class="step-accent"></div>
+                <div class="step-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="step-content">
+                    <h2 class="step-title">Community Engagement & Education</h2>
+                    <p class="step-description">Weekly newsletters provide awareness about new diseases and prevention methods, building a supportive community committed to public health.</p>
+                    
+                    <div class="info-box" data-aos="fade-up" data-aos-delay="200">
+                        <h3>Health Education:</h3>
+                        <p>Beyond medicine redistribution, we provide valuable health information through newsletters, building a community focused on improved health outcomes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="cta-section">
+            <div class="container">
+                <h2 data-aos="fade-up">Join MedLink Today</h2>
+                <p data-aos="fade-up" data-aos-delay="100">Be part of our mission to reduce medicine waste and increase accessibility to those in need. Together we can make healthcare more accessible and equitable for everyone.</p>
+                <div class="buttons-container" data-aos="fade-up" data-aos-delay="200">
+                    <a href="login.html" class="button button-primary">Register Now</a>
+                    <a href="contact.html" class="button button-secondary">Learn More</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            &copy; <script>document.write(new Date().getFullYear())</script> MedLink
+        </div>
+    </footer>
+
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out',
+            once: true
+        });
+
+        // User Menu Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const accountBtn = document.getElementById('accountBtn');
+            const accountDropdown = document.getElementById('accountDropdown');
+            const userName = document.getElementById('userName');
+            const dropdownUserInfo = document.getElementById('dropdownUserInfo');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            // Toggle dropdown
+            accountBtn.addEventListener('click', function(e) {
+                accountDropdown.style.display = accountDropdown.style.display === 'block' ? 'none' : 'block';
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!accountBtn.contains(e.target) && !accountDropdown.contains(e.target)) {
+                    accountDropdown.style.display = 'none';
+                }
+            });
+
+            // Handle logout
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    localStorage.removeItem('medlinkToken');
+                    localStorage.removeItem('medlinkUser');
+                    window.location.href = 'index.html';
+                });
+            }
+
+            // Update UI based on login status
+            function updateUserUI() {
+                const token = localStorage.getItem('medlinkToken');
+                const user = JSON.parse(localStorage.getItem('medlinkUser') || '{}');
+
+                if (token && user) {
+                    // User is logged in
+                    if (userName) {
+                        userName.textContent = user.name || 'Account';
+                        accountBtn.classList.remove('login-btn');
+                    }
+                    if (dropdownUserInfo) {
+                        dropdownUserInfo.innerHTML = `
+                            <p>Welcome, ${user.name || 'User'}</p>
+                            <p class="dropdown-phone">+91 ${user.phone}</p>
+                        `;
+                    }
+                    if (accountDropdown) {
+                        accountDropdown.style.display = 'none';
+                    }
+                } else {
+                    // User is not logged in
+                    if (accountBtn) {
+                        accountBtn.classList.add('login-btn');
+                        accountBtn.innerHTML = 'Login';
+                        accountBtn.addEventListener('click', function() {
+                            window.location.href = 'login.html';
+                        });
+                    }
+                    if (accountDropdown) {
+                        accountDropdown.style.display = 'none';
+                    }
+                }
+            }
+
+            // Update UI on page load
+            updateUserUI();
+        });
+    </script>
+</body>
+</html> 

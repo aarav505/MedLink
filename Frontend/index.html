@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MedLink - Medicine Donation Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <style>
+        /* Reset and Base Styles */
+        :root {
+            --primary-color: #0ea5e9; /* Sky Blue */
+            --secondary-color: #0d9488; /* Teal */
+            --accent-color: #059669; /* Emerald */
+            --light-text: #f8fafc; /* Lighter White */
+            --dark-text: #1e293b;  /* Darker Gray/Blue */
+            --background-light: #ffffff;
+            --background-base: #f1f5f9; /* Light Gray */
+            --border-color: #e2e8f0; /* Lighter Border */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background-base);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px; /* Slightly wider container */
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--background-light);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.8rem 0;
+            position: sticky; /* Keep header visible */
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            scale: 1.2;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 3.0 rem; /* Adjust as needed */
+            width: auto;
+        }
+
+        .logo span {
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: var(--dark-text);
+            letter-spacing: -0.025em;
+        }
+        
+        /* Navigation Styles */
+        nav {
+            display: flex;
+            gap: 1.8rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--dark-text);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--secondary-color);
+        }
+        
+        /* Header Search Style */
+        .header-search a {
+            color: var(--dark-text);
+            font-size: 1.3rem; /* Adjust size */
+            text-decoration: none;
+            margin-left: 1rem; /* Space from account info */
+            transition: color 0.2s;
+            line-height: 1; /* Align vertically */
+        }
+        .header-search a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Hero Section Styles */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 5rem 1rem; /* Increased padding */
+            text-align: center;
+            color: var(--light-text);
+            margin-bottom: 0; /* Remove bottom margin */
+            border-radius: 0; /* Remove border radius */
+            background-blend-mode: multiply;
+            background-size: cover; /* If using an image later */
+             /* Add background image later if desired: 
+             background-image: linear-gradient(rgba(14, 165, 233, 0.7), rgba(13, 148, 136, 0.8)), url('your-image-path.jpg'); */
+        }
+
+        .hero h1 {
+            font-size: 2.8rem; /* Larger headline */
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            color: var(--background-light); /* White headline */
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+             color: rgba(255, 255, 255, 0.9);
+        }
+
+        .hero .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .hero .button {
+            padding: 0.75rem 1.8rem;
+            font-size: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .hero .button-primary {
+            background: var(--background-light);
+            color: var(--secondary-color);
+            border: none;
+        }
+        .hero .button-primary:hover {
+            background: #f0f9ff; /* Slightly off-white */
+            color: var(--secondary-color);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        
+        .hero .button-secondary {
+             background: transparent;
+             border: 1px solid var(--background-light);
+             color: var(--background-light);
+             box-shadow: none;
+         }
+         .hero .button-secondary:hover {
+             background: rgba(255, 255, 255, 0.1);
+             border-color: var(--background-light);
+             color: var(--background-light);
+         }
+
+        /* Section Base Styles (Applied via class like .info-section) */
+        .intro-section, .info-section {
+            padding: 4rem 1rem;
+            text-align: center;
+            /* background-color: var(--background-light); */ /* Can be set per section if needed */
+        }
+        .intro-section {
+            background-color: var(--background-light); /* Keep specific bg for intro */
+        }
+
+        .intro-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: var(--dark-text);
+        }
+
+        .intro-section p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 2rem auto;
+            color: #374151; /* Slightly lighter dark text */
+        }
+        
+        /* Remove old section styles */
+        .info-section, .team-grid, #why-medlink, #how-it-works-summary {
+             /* Styles removed or adjusted */
+             /* Keep structure if needed, but visually distinct */
+             padding: 3rem 1rem;
+             margin-bottom: 2rem;
+        }
+        
+        /* Card styles might be reused later */
+         .card {
+            background: var(--background-light);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+         }
+          .card h3 {
+             font-size: 1.125rem;
+             font-weight: 600;
+             color: var(--dark-text);
+             margin-bottom: 0.75rem;
+         }
+         .card p {
+             color: #4b5563; 
+             font-size: 0.9rem;
+         }
+         
+        /* Footer Styles */
+        footer {
+            background-color: var(--background-light);
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            padding: 1.5rem 0;
+            color: #6b7280; /* Gray text */
+            font-size: 0.85rem;
+            margin-top: 3rem;
+        }
+
+        /* Center Why Medlink Title/Desc */
+        #why-medlink {
+            text-align: center;
+        }
+
+        /* Specific styling for Why MedLink cards */
+        #why-medlink h2 { /* Keep specific h2 styles if needed */
+             margin-bottom: 0.5rem;
+             font-size: 1.8rem;
+             /* text-align: center; /* Handled by parent */
+        }
+        #why-medlink .section-description {
+            margin-bottom: 2.5rem; /* More space below description */
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #4b5563;
+            /* text-align: center; /* Handled by parent */
+        }
+
+        #why-medlink .grid {
+            justify-content: center;
+            display: grid;
+            /* Responsive grid: creates columns ~280px wide, fitting as many as possible */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem; /* Adjust gap */
+        }
+
+        /* Updated card style for product look */
+        #why-medlink .card {
+            background: #F8F9FA;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem; /* Slightly less padding */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+            text-align: center; /* Center all card text */
+            transition: box-shadow 0.2s;
+        }
+        #why-medlink .card:hover {
+             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        #why-medlink .card img.product-image {
+            max-width: 80%; /* Control image size */
+            height: 150px; /* Fixed height for consistency */
+            object-fit: contain; /* Maintain aspect ratio */
+            margin: 0 auto 1rem auto; /* Center image and add space below */
+            display: block;
+            background-color: #f8f9fa; /* Light background for image area */
+             border-radius: 4px;
+        }
+        #why-medlink .card h3 {
+            color: var(--dark-text); /* Dark text */
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem; /* Adjust font size */
+            font-weight: 600;
+        }
+        #why-medlink .card p {
+            color: #4b5563; /* Standard text color */
+            font-size: 0.9rem;
+        }
+
+        /* Added Modal Styles */
+        .modal-overlay {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+            align-items: center; /* Vertically center */
+            justify-content: center; /* Horizontally center */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto; /* Auto margin for centering */
+            padding: 25px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 600px; /* Wider modal for better form layout */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+            position: relative;
+        }
+
+        .modal-close-btn {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-close-btn:hover,
+        .modal-close-btn:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        /* Form styling inside modal */
+        .modal-content h2 {
+            color: var(--dark-text);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-content p {
+            color: #4b5563;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-text);
+        }
+
+        .form-group small {
+            display: block;
+            color: #6b7280;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 0.65rem;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            background-color: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+        }
+
+        .form-buttons {
+            margin-top: 1.5rem;
+        }
+
+        .form-buttons button {
+            width: 100%;
+            padding: 0.75rem 1rem;
+        }
+
+        .user-menu {
+            position: relative;
+            margin-left: 1rem;
+        }
+        
+        .account-btn {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+            color: var(--dark-text); /* Add text color */
+        }
+        
+        .account-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .user-name {
+            margin-right: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-text); /* Ensure text color */
+        }
+        
+        .user-icon {
+            color: var(--dark-text); /* Ensure icon color */
+        }
+        
+        .account-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 240px;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .account-dropdown.active {
+            display: block;
+        }
+        
+        .dropdown-header {
+            padding: 1rem;
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .dropdown-header p {
+            margin: 0;
+        }
+        
+        .dropdown-phone {
+            font-weight: 600;
+            margin-top: 0.25rem !important;
+        }
+        
+        .dropdown-actions {
+            padding: 0.5rem 0;
+        }
+        
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--dark-text);
+            text-decoration: none;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .dropdown-item svg {
+            margin-right: 0.75rem;
+            color: var(--primary-color);
+        }
+        
+        .dropdown-item.danger {
+            color: #ef4444;
+        }
+        
+        .dropdown-item.danger svg {
+            color: #ef4444;
+        }
+        
+        /* Login button state when not logged in */
+        .login-btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            border: none;
+        }
+        
+        .login-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+    </style>
+
+    <!-- Added Modal Styles -->
+    <style>
+        .modal-overlay {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+            align-items: center; /* Vertically center */
+            justify-content: center; /* Horizontally center */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto; /* Auto margin for centering */
+            padding: 25px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px; /* Max width */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+            position: relative;
+        }
+
+        .modal-close-btn {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-close-btn:hover,
+        .modal-close-btn:focus {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+
+  </head>
+
+  <body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                 <a href="index.html" class="logo">
+                     <img src="Logo.png" alt="MedLink Logo">
+                     <span>MedLink</span>
+                 </a>
+                <nav>
+                    <a href="how-it-works.html">How it Works</a>
+                    <a href="team.html">Team</a>
+                    <a href="contact.html">Contact</a>
+                </nav>
+                <div class="user-menu">
+                    <div class="account-btn" id="accountBtn">
+                        <span class="user-name" id="userName">Login</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="user-icon">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="account-dropdown" id="accountDropdown">
+                        <div class="dropdown-header" id="dropdownUserInfo">
+                            <p>Welcome</p>
+                            <p class="dropdown-phone">+91 XXXXXXXXXX</p>
+                        </div>
+                        <div class="dropdown-actions">
+                            <a href="profile.html" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                My Profile
+                            </a>
+                            <button id="logoutBtn" class="dropdown-item danger">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" data-aos="fade-up">
+             <div class="container">
+                 <h1>Redistribute. Reuse. Revive Lives.</h1>
+                 <p>Securely donate or request verified, unused medicines. Join our community effort to reduce waste and improve access to essential healthcare.</p>
+                 <div class="button-group">
+                     <button class="button button-primary" onclick="openDonateForm()">List a Medicine</button>
+                     <button class="button button-secondary" onclick="window.location.href='browse-medicines.html'">Browse Available Medicines</button>
+                 </div>
+             </div>
+         </section>
+         
+         <section class="intro-section" data-aos="fade-up" data-aos-delay="100">
+             <div class="container">
+                 <h2>Let Us Help You Make a Difference</h2>
+                 <p>MedLink provides a trusted platform for individuals, pharmacists, and healthcare professionals to manage surplus medications responsibly. Whether donating or requesting, our process is simple, secure, and focused on community well-being.</p>
+                 <!-- Placeholder for maybe 3 icon-based feature highlights later -->
+             </div>
+         </section>
+         
+         <section class="info-section" id="why-medlink">
+            <div class="container">
+                <h2>Why Choose MedLink?</h2>
+                <p class="section-description">MedLink provides a vital bridge, connecting surplus medications with individuals and communities in need, ensuring safety, reducing waste, and improving healthcare access.</p>
+                <div class="grid">
+                    <div class="card">
+                        <img src="waste.png" alt="Waste Reduction Icon" class="product-image"> <!-- Placeholder Image -->
+                        <h3>Combat Medicine Waste</h3>
+                        <p>Millions worth of usable medicine is discarded annually. MedLink offers a secure channel to redirect these valuable resources instead of letting them go to waste.</p>
+                    </div>
+                    <div class="card">
+                        <img src="acess.png" alt="Accessibility Icon" class="product-image"> <!-- Placeholder Image -->
+                        <h3>Enhance Accessibility</h3>
+                        <p>Many struggle to afford necessary medications. By facilitating donations, MedLink helps bridge the gap, making essential treatments more accessible to underserved populations.</p>
+                    </div>
+                    <div class="card">
+                        <img src="safe.png" alt="Safety Icon" class="product-image"> <!-- Placeholder Image -->
+                        <h3>Ensure Safety & Quality</h3>
+                        <p>We partner with healthcare professionals and adhere to strict guidelines to verify medicine quality, storage, and expiry, ensuring recipient safety.</p>
+                    </div>
+                    <div class="card">
+                        <img src="lock.png" alt="Community Icon" class="product-image"> <!-- Placeholder Image -->
+                        <h3>Community Impact</h3>
+                        <p>Donors directly contribute to the well-being of their community, while recipients gain access to vital health support through a trusted, transparent platform.</p>
+                    </div>
+                    <div class="card">
+                        <img src="sus.png" alt="Sustainable Healthcare Icon" class="product-image"> <!-- Placeholder Image -->
+                        <h3>Promote Sustainable Healthcare</h3>
+                        <p>By maximizing the use of available medicines, MedLink supports a more sustainable healthcare system, reducing environmental impact and encouraging responsible consumption.</p>
+                    </div>
+                    <div class="card">
+                        <img src="local.png" alt="Empower Communities Icon" class="product-image"> <!-- Placeholder Image -->
+                        <h3>Empower Local Communities</h3>
+                        <p>Through partnerships with NGOs, pharmacies, and volunteers, MedLink strengthens local health networks, empowering communities to take charge of their healthcare needs.</p>
+                    </div>
+                </div>
+            </div>
+       </section>
+
+
+         
+         <!-- Removed old card sections -->
+         <!-- Placeholder for potential future sections -->
+         <!-- <section class="features-section">
+              <div class="container">
+                   <h2>Key Features</h2>
+                   <div class="grid grid-3">
+                       <div class="card">...</div> 
+                       <div class="card">...</div> 
+                       <div class="card">...</div> 
+                   </div>
+              </div>
+         </section> -->
+         
+    </main>
+
+    <footer>
+        <div class="container">
+             &copy; <script>document.write(new Date().getFullYear())</script> MedLink
+        </div>
+    </footer>
+
+    <!-- Modals (Donate/Request) -->
+    <div id="donateModal" class="modal-overlay" onclick="closeModalIfOverlay(event, 'donateModal')">
+        <div class="modal-content">
+            <span class="modal-close-btn" onclick="closeModal('donateModal')">&times;</span>
+            <h2>List a Medicine for Donation</h2>
+            <p>Please provide details about the medicine you'd like to list.</p>
+            <form id="donateForm">
+                <div class="form-group">
+                    <label for="medicineName">Medicine Name</label>
+                    <input type="text" id="medicineName" name="medicineName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="expiryDate">Expiry Date</label>
+                    <input type="date" id="expiryDate" name="expiryDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="medicineImage">Medicine Images <span style="color: #e11d48;">*</span></label>
+                    <input type="file" id="medicineImage" name="medicineImage" accept="image/*" required>
+                    <small>Upload an image of the medicine packaging (front view preferred)</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="condition">Condition</label>
+                    <select id="condition" name="condition" required>
+                        <option value="">Select condition</option>
+                        <option value="unopened">Unopened</option>
+                        <option value="opened_unused">Opened but unused</option> 
+                        <option value="partially_used">Partially used</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price (INR, Optional)</label>
+                    <input type="number" id="price" name="price" min="0" step="0.01" placeholder="Leave blank if donating for free">
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="button button-primary-alt">List Medicine</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="requestModal" class="modal-overlay" onclick="closeModalIfOverlay(event, 'requestModal')">
+        <div class="modal-content">
+            <span class="modal-close-btn" onclick="closeModal('requestModal')">&times;</span>
+            <form id="requestForm">
+                <!-- Add request form fields here -->
+                <button type="submit">Submit Request</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Newsletter Modal -->
+    <div id="newsletterModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(14,165,233,0.18); align-items:center; justify-content:center; z-index:2000;">
+      <div style="background:linear-gradient(135deg, #f0f9ff 60%, #e0f2fe 100%); color:#1e293b; border-radius:1.25rem; padding:2.5rem 2rem 2rem 2rem; min-width:320px; max-width:90vw; box-shadow:0 8px 32px rgba(14,165,233,0.18); text-align:center; border:1.5px solid #bae6fd; position:relative;">
+        <button id="newsletterClose" style="position:absolute; top:18px; right:18px; background:none; border:none; font-size:1.5rem; color:#0ea5e9; cursor:pointer;">&times;</button>
+        <div style="display:flex; align-items:center; justify-content:center; margin-bottom:1.2rem;">
+          <svg width="48" height="48" fill="none" viewBox="0 0 24 24"><rect width="24" height="24" rx="12" fill="#0ea5e9"/><path d="M7 9l5 3.5L17 9" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="7" y="9" width="10" height="6" rx="1" stroke="#fff" stroke-width="1.5"/></svg>
+        </div>
+        <h2 style="color:#0ea5e9; margin-bottom:0.5rem; font-size:1.5rem; font-weight:700;">Join Our Newsletter</h2>
+        <p style="margin-bottom:1.5rem; color:#334155; font-size:1.05rem;">Stay updated! Enter your email to receive MedLink news and updates.</p>
+        <form id="newsletterForm">
+          <input type="email" id="newsletterEmail" placeholder="Your email address" required style="padding:0.85rem 1.1rem; border-radius:8px; border:1.5px solid #bae6fd; width:100%; margin-bottom:1.1rem; font-size:1rem;">
+          <div style="display:flex; gap:1rem; justify-content:center;">
+            <button type="submit" class="button button-primary-alt" style="font-size:1rem; padding:0.7rem 1.5rem;">Subscribe</button>
+            <button type="button" id="newsletterSkip" class="button" style="background:#e0f2fe; color:#0ea5e9; font-weight:500; font-size:1rem;">No, thanks</button>
+          </div>
+        </form>
+        <div id="newsletterMsg" style="margin-top:1.2rem; color:var(--secondary-color); display:none; font-weight:500;"></div>
+      </div>
+    </div>
+
+    <script>
+        // --- Keep Modal Open/Close Logic --- 
+        const donateModal = document.getElementById('donateModal');
+        const requestModal = document.getElementById('requestModal');
+        const donateForm = document.getElementById('donateForm'); 
+        const requestForm = document.getElementById('requestForm');
+
+        function openModal(modalId) {
+            var modal = document.getElementById(modalId);
+            if(modal) modal.style.display = 'flex';
+        }
+        function closeModal(modalId) {
+             var modal = document.getElementById(modalId);
+             if(modal) modal.style.display = 'none';
+        }
+        function closeModalIfOverlay(event, modalId) {
+             if (event.target.id === modalId) {
+                 closeModal(modalId);
+             }
+         }
+         window.onclick = function(event) {
+            if (event.target == donateModal) {
+                closeModal('donateModal');
+            }
+            if (event.target == requestModal) {
+                closeModal('requestModal');
+            }
+        }
+        
+        // --- Keep Donate/Request Form Handlers --- 
+        donateForm.addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            if (donateForm.checkValidity()) {
+                // Get image file
+                const imageFile = document.getElementById('medicineImage').files[0];
+                if (!imageFile) {
+                    alert('Please select an image of the medicine');
+                    return;
+                }
+
+                // Create FormData object for file upload
+                const formData = new FormData();
+                
+                // Add medicine data
+                formData.append('name', document.getElementById('medicineName').value);
+                formData.append('expiry', document.getElementById('expiryDate').value);
+                formData.append('condition', document.getElementById('condition').value);
+                formData.append('price', document.getElementById('price').value || '0');
+                formData.append('image', imageFile);
+                
+                // Show loading state
+                const submitButton = donateForm.querySelector('button[type="submit"]');
+                const originalButtonText = submitButton.textContent;
+                submitButton.textContent = 'Submitting...';
+                submitButton.disabled = true;
+                
+                // Send data to backend API
+                fetch('/api/medicines', {
+                    method: 'POST',
+                    body: formData // Using FormData instead of JSON for file upload
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to save medicine');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Medicine added successfully:', data);
+                    
+                    // Show success message
+                    const successMessage = document.createElement('div');
+                    successMessage.innerHTML = `
+                        <div style="margin-top: 20px; padding: 15px; background-color: #e6f7f2; border-radius: 5px; text-align: center;">
+                            <h3 style="color: #0d9488; margin-bottom: 10px;">Medicine Listed Successfully!</h3>
+                            <p>Your medicine has been added to the database.</p>
+                            <p>You can now view it on the <a href="/browse" style="color: #0ea5e9; text-decoration: underline;">Browse Medicines</a> page.</p>
+                        </div>
+                    `;
+                    
+                    // Replace form with success message
+                    donateForm.innerHTML = '';
+                    donateForm.appendChild(successMessage);
+                    
+                    // Add a close button to return to form later
+                    const closeButton = document.createElement('button');
+                    closeButton.textContent = 'Close';
+                    closeButton.className = 'button button-primary-alt';
+                    closeButton.style.marginTop = '15px';
+                    closeButton.onclick = function() {
+                        closeModal('donateModal');
+                        
+                        // Reset the form for future submissions
+                        setTimeout(() => {
+                            donateForm.innerHTML = originalFormHTML;
+                            setupFormHandlers();
+                        }, 300);
+                    };
+                    donateForm.appendChild(closeButton);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    
+                    // Reset button
+                    submitButton.textContent = originalButtonText;
+                    submitButton.disabled = false;
+                    
+                    // Show error message
+                    alert('Error: ' + error.message);
+                });
+            } else {
+                alert('Please fill in all required fields.');
+            }
+        });
+        
+        // Store original form HTML for resetting
+        const originalFormHTML = donateForm.innerHTML;
+        
+        // Setup form handlers (used after form reset)
+        function setupFormHandlers() {
+            // Re-attach event listener to the new form elements
+            donateForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                // The main submit handler will be called
+            });
+        }
+
+        if (requestForm) {
+            requestForm.addEventListener('submit', function(event) {
+                event.preventDefault(); 
+                if (requestForm.checkValidity()) {
+                    const formData = new FormData(requestForm);
+                    const data = Object.fromEntries(formData.entries());
+                    console.log('Request Details (Not Saved):', data); 
+                    alert('Thank you for your interest! To complete a request, please contact MedLink support or the relevant listing provider. (This form submission is for demonstration only and does not save data).');
+                    closeModal('requestModal');
+                    requestForm.reset(); 
+                } else {
+                     alert('Please fill in all required fields.');
+                }
+            });
+        }
+
+        function openDonateForm() {
+            // Check if user is logged in
+            const token = localStorage.getItem('medlinkToken');
+            if (!token) {
+                alert('Please login to list a medicine.');
+                window.location.href = 'login.html';
+                return;
+            }
+            openModal('donateModal');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const accountBtn = document.getElementById('accountBtn');
+            const accountDropdown = document.getElementById('accountDropdown');
+            const userName = document.getElementById('userName');
+            const dropdownUserInfo = document.getElementById('dropdownUserInfo');
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            // Check if user is logged in
+            const token = localStorage.getItem('medlinkToken');
+            const user = JSON.parse(localStorage.getItem('medlinkUser') || '{}');
+            
+            // Toggle dropdown when account button is clicked
+            if (accountBtn) {
+                accountBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (!token) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    accountDropdown.classList.toggle('active');
+                });
+            }
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (accountDropdown && accountDropdown.classList.contains('active') && !accountDropdown.contains(e.target)) {
+                    accountDropdown.classList.remove('active');
+                }
+            });
+            
+            // Handle logout
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    localStorage.removeItem('medlinkToken');
+                    localStorage.removeItem('medlinkUser');
+                    window.location.href = 'index.html';
+                });
+            }
+            
+            // Update UI based on login state
+            function updateUserUI() {
+                if (token && user && user.phone) {
+                    // User is logged in
+                    if (userName) userName.textContent = user.name || 'User';
+                    
+                    if (dropdownUserInfo) {
+                        dropdownUserInfo.innerHTML = `
+                            <p>Welcome, ${user.name || 'User'}</p>
+                            <p class="dropdown-phone">+91 ${user.phone}</p>
+                        `;
+                    }
+                    
+                    // If we have accountBtn, make sure it's showing Account with icon
+                    if (accountBtn && accountBtn.classList.contains('login-btn')) {
+                        accountBtn.classList.remove('login-btn');
+                        accountBtn.innerHTML = `
+                            <span class="user-name">${user.name || 'Account'}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="user-icon">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        `;
+                    }
+                } else {
+                    // User is not logged in
+                    if (accountBtn) {
+                        accountBtn.classList.add('login-btn');
+                        accountBtn.innerHTML = 'Login';
+                        accountBtn.addEventListener('click', function() {
+                            window.location.href = 'login.html';
+                        });
+                    }
+                    
+                    // Hide dropdown if it exists
+                    if (accountDropdown) {
+                        accountDropdown.style.display = 'none';
+                    }
+                }
+            }
+            
+            // Update UI on page load
+            updateUserUI();
+        });
+
+        // Newsletter Modal Logic
+        function showNewsletterModal() {
+          document.getElementById('newsletterModal').style.display = 'flex';
+        }
+        document.getElementById('newsletterForm').onsubmit = function(e) {
+          e.preventDefault();
+          const email = document.getElementById('newsletterEmail').value.trim();
+          if (!email) return;
+          fetch('/api/newsletter', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          })
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById('newsletterMsg').textContent = 'Thank you for subscribing!';
+            document.getElementById('newsletterMsg').style.display = 'block';
+            setTimeout(() => {
+              document.getElementById('newsletterModal').style.display = 'none';
+            }, 1400);
+            localStorage.setItem('newsletterPrompted', '1');
+          })
+          .catch(() => {
+            document.getElementById('newsletterMsg').textContent = 'There was an error. Please try again later.';
+            document.getElementById('newsletterMsg').style.display = 'block';
+          });
+        };
+        document.getElementById('newsletterSkip').onclick = function() {
+          document.getElementById('newsletterModal').style.display = 'none';
+          localStorage.setItem('newsletterPrompted', '1');
+        };
+        document.getElementById('newsletterClose').onclick = function() {
+          document.getElementById('newsletterModal').style.display = 'none';
+          localStorage.setItem('newsletterPrompted', '1');
+        };
+        document.addEventListener('DOMContentLoaded', function() {
+          if (!localStorage.getItem('newsletterPrompted')) {
+            setTimeout(showNewsletterModal, 700);
+          }
+        });
+
+    </script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+    AOS.init({
+      duration: 800,
+      easing: 'ease-out',
+      once: true
+    });
+    </script>
+</body>
+</html>

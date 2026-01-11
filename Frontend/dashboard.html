@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Dashboard - MedLink</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .medicine-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+        .medicine-card {
+            background: rgba(255,255,255,0.15);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .medicine-card.selected {
+            background: rgba(14,165,233,0.25);
+            border: 2px solid var(--primary-color);
+        }
+        .medicine-card h3 {
+            margin: 0 0 0.5rem 0;
+        }
+        .medicine-card p {
+            margin: 0.2rem 0;
+        }
+        .actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+        .btn {
+            padding: 0.5rem 1.2rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .btn-approve {
+            background: #059669;
+            color: #fff;
+        }
+        .btn-approve:hover {
+            background: #047857;
+        }
+        .btn-reject {
+            background: #ef4444;
+            color: #fff;
+        }
+        .btn-reject:hover {
+            background: #b91c1c;
+        }
+        .no-listings {
+            text-align: center;
+            color: #fff;
+            margin-top: 3rem;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Professional Dashboard</h1>
+            <button id="logoutBtn" class="btn btn-reject" style="height:2.5rem;">Logout</button>
+        </div>
+        <div class="medicine-list" id="medicineList"></div>
+        <div class="no-listings" id="noListings" style="display:none;">No pending medicines to review.</div>
+    </div>
+    <!-- Modal for Approve/Reject -->
+    <div id="modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; z-index:1000;">
+        <div style="background:white; color:#1e293b; border-radius:1rem; padding:2rem; min-width:300px; max-width:90vw; box-shadow:0 8px 32px rgba(0,0,0,0.18); text-align:center;">
+            <h2 id="modalTitle">Medicine Action</h2>
+            <div id="modalContent"></div>
+            <div style="margin-top:2rem; display:flex; gap:1rem; justify-content:center;">
+                <button id="approveBtn" class="btn btn-approve">Approve</button>
+                <button id="rejectBtn" class="btn btn-reject">Reject</button>
+                <button id="cancelBtn" class="btn" style="background:#e5e7eb; color:#1e293b;">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Only allow access if user is professional
+        const user = JSON.parse(localStorage.getItem('medlinkUser') || '{}');
+        const token = localStorage.getItem('medlinkToken');
+        if (!token || user.role !== 'professional') {
+            alert('Access denied. Only professionals can access this page.');
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('logoutBtn').onclick = function() {
+            localStorage.removeItem('medlinkUser');
+            localStorage.removeItem('medlinkToken');
+            window.location.href = 'login.html';
+        };
+
+        function fetchPendingMedicines() {
+            fetch('/api/medicines/pending', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(res => res.json())
+            .then(medicines => {
+                renderMedicines(medicines);
+            })
+            .catch(() => {
+                document.getElementById('noListings').textContent = 'Error loading medicines.';
+                document.getElementById('noListings').style.display = 'block';
+            });
+        }
+
+        function renderMedicines(medicines) {
+            const list = document.getElementById('medicineList');
+            if (!medicines.length) {
+                list.innerHTML = '';
+                document.getElementById('noListings').style.display = 'block';
+                return;
+            }
+            document.getElementById('noListings').style.display = 'none';
+            list.innerHTML = '';
+            medicines.forEach(med => {
+                const card = document.createElement('div');
+                card.className = 'medicine-card';
+                card.innerHTML = `
+                    <h3>${med.name}</h3>
+                    <p><strong>Expiry:</strong> ${med.expiry}</p>
+                    <p><strong>Condition:</strong> ${med.condition}</p>
+                    <p><strong>Price:</strong> ${med.price === '0' ? 'Free' : '₹' + med.price}</p>
+                    <p><strong>Listed:</strong> ${new Date(med.timestamp).toLocaleDateString()}</p>
+                    <p><strong>Status:</strong> ${med.status}</p>
+                `;
+                card.addEventListener('click', function() {
+                    showModal(med, card);
+                });
+                list.appendChild(card);
+            });
+        }
+
+        function showModal(med, card) {
+            const modal = document.getElementById('modal');
+            document.getElementById('modalTitle').textContent = med.name;
+            let imageHtml = '';
+            if (med.image) {
+                imageHtml = `<div style="margin-bottom:1rem;"><img src="${med.image}" alt="${med.name} image" style="max-width:220px; max-height:180px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.10);"></div>`;
+            }
+            document.getElementById('modalContent').innerHTML = `
+                ${imageHtml}
+                <p><strong>Expiry:</strong> ${med.expiry}</p>
+                <p><strong>Condition:</strong> ${med.condition}</p>
+                <p><strong>Price:</strong> ${med.price === '0' ? 'Free' : '₹' + med.price}</p>
+                <p><strong>Listed:</strong> ${new Date(med.timestamp).toLocaleDateString()}</p>
+                <p><strong>Status:</strong> ${med.status}</p>
+            `;
+            modal.style.display = 'flex';
+            document.getElementById('approveBtn').onclick = function() {
+                updateStatus(med.id, 'approve', card);
+                modal.style.display = 'none';
+            };
+            document.getElementById('rejectBtn').onclick = function() {
+                updateStatus(med.id, 'reject', card);
+                modal.style.display = 'none';
+            };
+            document.getElementById('cancelBtn').onclick = function() {
+                modal.style.display = 'none';
+            };
+        }
+
+        function updateStatus(id, action, card) {
+            fetch(`/api/medicines/${id}/${action}`, {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(res => {
+                if (res.ok) {
+                    card.remove();
+                    if (!document.querySelectorAll('.medicine-card').length) {
+                        document.getElementById('noListings').style.display = 'block';
+                    }
+                } else {
+                    alert('Failed to update status.');
+                }
+            });
+        }
+
+        fetchPendingMedicines();
+    </script>
+</body>
+</html> 

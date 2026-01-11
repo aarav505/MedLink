@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pharmacist Dashboard - MedLink</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            color: #1e293b;
+        }
+        header {
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 2rem 0 1.5rem 0;
+            text-align: center;
+        }
+        .listing-card {
+            background: #fff;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 2rem;
+            padding: 1.5rem;
+            align-items: flex-start;
+        }
+        .listing-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+        .listing-details {
+            flex: 1;
+        }
+        .listing-details h2 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .listing-details p {
+            margin: 0.2rem 0;
+            color: #334155;
+        }
+        .listing-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .btn {
+            padding: 0.5rem 1.2rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .btn-approve {
+            background: #059669;
+            color: #fff;
+        }
+        .btn-approve:hover {
+            background: #047857;
+        }
+        .btn-reject {
+            background: #ef4444;
+            color: #fff;
+        }
+        .btn-reject:hover {
+            background: #b91c1c;
+        }
+        .status-label {
+            display: inline-block;
+            padding: 0.2rem 0.7rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: #fbbf24;
+            color: #92400e;
+            margin-left: 0.5rem;
+        }
+        .no-listings {
+            text-align: center;
+            color: #64748b;
+            margin-top: 3rem;
+            font-size: 1.1rem;
+        }
+        @media (max-width: 700px) {
+            .listing-card { flex-direction: column; gap: 1rem; }
+            .listing-image { width: 100%; height: 180px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" style="text-decoration:none; color:#1e293b; font-weight:600; font-size:1.3rem;">&larr; MedLink</a>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Pharmacist Dashboard</h1>
+        <div id="listings"></div>
+        <div id="noListings" class="no-listings" style="display:none;">No pending listings to review.</div>
+    </div>
+    <script>
+        // Only allow access if user is pharmacist (phone: 9999999999)
+        const user = JSON.parse(localStorage.getItem('medlinkUser') || '{}');
+        const token = localStorage.getItem('medlinkToken');
+        if (!token || user.role !== 'pharmacist') {
+            alert('Access denied. Only pharmacists can access this page.');
+            window.location.href = 'index.html';
+        }
+
+        async function fetchPendingListings() {
+            const res = await fetch('/api/medicines/pending', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (!res.ok) {
+                document.getElementById('noListings').textContent = 'Error loading listings.';
+                document.getElementById('noListings').style.display = 'block';
+                return;
+            }
+            const listings = await res.json();
+            renderListings(listings);
+        }
+
+        function renderListings(listings) {
+            const container = document.getElementById('listings');
+            container.innerHTML = '';
+            if (!listings.length) {
+                document.getElementById('noListings').style.display = 'block';
+                return;
+            }
+            document.getElementById('noListings').style.display = 'none';
+            listings.forEach(listing => {
+                const card = document.createElement('div');
+                card.className = 'listing-card';
+                card.innerHTML = `
+                    <img src="${listing.image}" class="listing-image" alt="Medicine Image">
+                    <div class="listing-details">
+                        <h2>${listing.name} <span class="status-label">Pending</span></h2>
+                        <p><b>Expiry:</b> ${listing.expiry}</p>
+                        <p><b>Condition:</b> ${listing.condition}</p>
+                        <p><b>Price:</b> ${listing.price && listing.price !== '0' ? '₹' + listing.price : 'Free'}</p>
+                        <p><b>Listed At:</b> ${new Date(listing.timestamp).toLocaleString()}</p>
+                    </div>
+                    <div class="listing-actions">
+                        <button class="btn btn-approve">Approve</button>
+                        <button class="btn btn-reject">Reject</button>
+                    </div>
+                `;
+                card.querySelector('.btn-approve').onclick = () => handleAction(listing.id, 'approve', card);
+                card.querySelector('.btn-reject').onclick = () => handleAction(listing.id, 'reject', card);
+                container.appendChild(card);
+            });
+        }
+
+        async function handleAction(id, action, card) {
+            const endpoint = `/api/medicines/${id}/${action}`;
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (res.ok) {
+                card.remove();
+                if (!document.querySelectorAll('.listing-card').length) {
+                    document.getElementById('noListings').style.display = 'block';
+                }
+            } else {
+                alert('Failed to ' + action + ' listing.');
+            }
+        }
+
+        fetchPendingListings();
+    </script>
+</body>
+</html> 

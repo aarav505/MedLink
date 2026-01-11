@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MedLink</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        header .logo span {
+            color: white;
+        }
+
+        header nav a {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        header nav a:hover {
+            color: white;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 0;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            width: 90%;
+            max-width: 450px;
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .login-header h1 {
+            margin: 0;
+            font-size: 1.75rem;
+        }
+
+        .login-content {
+            padding: 2rem;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-text);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.25);
+        }
+
+        .otp-inputs {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        .otp-input {
+            width: 3rem;
+            height: 3.5rem;
+            font-size: 1.5rem;
+            text-align: center;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+        }
+
+        .otp-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.25);
+        }
+
+        .action-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .action-button:hover {
+            background: #0c8dca;
+        }
+
+        .resend-otp {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .resend-otp button {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 500;
+            padding: 0;
+            margin-left: 0.25rem;
+        }
+
+        .resend-otp button:hover {
+            text-decoration: underline;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .timer {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        /* User Menu Styles */
+        .user-menu {
+            position: relative;
+        }
+
+        .account-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .account-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .account-btn.login-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .account-btn.login-btn:hover {
+            background-color: #0c8dca;
+        }
+
+        .user-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .account-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .dropdown-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dropdown-header p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-header p:first-child {
+            font-weight: 500;
+            color: var(--dark-text);
+        }
+
+        .dropdown-phone {
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+
+        .dropdown-actions {
+            padding: 0.5rem 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--dark-text);
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .dropdown-item svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .dropdown-item.danger {
+            color: #ef4444;
+        }
+
+        .dropdown-item.danger:hover {
+            background-color: #fee2e2;
+        }
+
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+            background: transparent;
+            padding: 1.5rem 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="Logo.png" alt="MedLink Logo">
+                    <span>MedLink</span>
+                </a>
+                <nav>
+                    <a href="how-it-works.html">How it Works</a>
+                    <a href="team.html">Team</a>
+                    <a href="contact.html">Contact</a>
+                </nav>
+                <div class="user-menu">
+                    <div class="account-btn" id="accountBtn">
+                        <span class="user-name" id="userName">Login</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="user-icon">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="account-dropdown" id="accountDropdown">
+                        <div class="dropdown-header" id="dropdownUserInfo">
+                            <p>Welcome</p>
+                            <p class="dropdown-phone">+91 XXXXXXXXXX</p>
+                        </div>
+                        <div class="dropdown-actions">
+                            <a href="profile.html" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                My Profile
+                            </a>
+                            <button id="logoutBtn" class="dropdown-item danger">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="login-container">
+            <div class="login-header">
+                <h1>Welcome to MedLink</h1>
+            </div>
+            <div class="login-content">
+                <!-- Step 1: User Information -->
+                <div class="form-step active" id="infoStep">
+                    <h2 class="text-center">Create Your Account</h2>
+                    <p class="text-center">Please enter your details to get started</p>
+                    
+                    <form id="userInfoForm">
+                        <div class="form-group">
+                            <label for="role">Who are you?</label>
+                            <select id="role" name="role" required>
+                                <option value="individual">Individual</option>
+                                <option value="professional">Professional</option>
+                            </select>
+                        </div>
+                        <div id="nonProfessionalFields">
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" required placeholder="Enter your 10-digit number" maxlength="10" pattern="[0-9]{10}">
+                                <div class="error-message" id="phoneError">Please enter a valid 10-digit phone number</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Full Name</label>
+                                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <select id="state" name="state" required>
+                                    <option value="">Select your state</option>
+                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                    <option value="Assam">Assam</option>
+                                    <option value="Bihar">Bihar</option>
+                                    <option value="Chhattisgarh">Chhattisgarh</option>
+                                    <option value="Goa">Goa</option>
+                                    <option value="Gujarat">Gujarat</option>
+                                    <option value="Haryana">Haryana</option>
+                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                    <option value="Jharkhand">Jharkhand</option>
+                                    <option value="Karnataka">Karnataka</option>
+                                    <option value="Kerala">Kerala</option>
+                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                    <option value="Maharashtra">Maharashtra</option>
+                                    <option value="Manipur">Manipur</option>
+                                    <option value="Meghalaya">Meghalaya</option>
+                                    <option value="Mizoram">Mizoram</option>
+                                    <option value="Nagaland">Nagaland</option>
+                                    <option value="Odisha">Odisha</option>
+                                    <option value="Punjab">Punjab</option>
+                                    <option value="Rajasthan">Rajasthan</option>
+                                    <option value="Sikkim">Sikkim</option>
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                    <option value="Telangana">Telangana</option>
+                                    <option value="Tripura">Tripura</option>
+                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                    <option value="Uttarakhand">Uttarakhand</option>
+                                    <option value="West Bengal">West Bengal</option>
+                                    <option value="Delhi">Delhi</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" name="city" required placeholder="Enter your city">
+                            </div>
+                        </div>
+                        <div id="professionalFields" style="display:none;">
+                            <div class="form-group">
+                                <label for="proName">Name or Username</label>
+                                <input type="text" id="proName" name="proName" placeholder="Enter your name or username">
+                            </div>
+                            <div class="form-group">
+                                <label for="proPassword">Password</label>
+                                <input type="password" id="proPassword" name="proPassword" placeholder="Enter your password">
+                            </div>
+                        </div>
+                        <button type="submit" class="action-button" id="submitBtn">Login</button>
+                    </form>
+                </div>
+                
+                <!-- Step 2: OTP Verification -->
+                <div class="form-step" id="otpStep">
+                    <h2 class="text-center">Verify Your Number</h2>
+                    <p class="text-center">We've sent a 6-digit code to <span id="userPhone">+91 xxxxxxxx</span></p>
+                    
+                    <form id="otpForm">
+                        <div class="otp-inputs">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                        </div>
+                        
+                        <div class="error-message text-center" id="otpError">Please enter a valid OTP</div>
+                        
+                        <button type="submit" class="action-button">Verify & Continue</button>
+                        
+                        <div class="resend-otp">
+                            Didn't receive code? <span class="timer" id="otpTimer">01:30</span>
+                            <button type="button" id="resendOtp" disabled>Resend</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            &copy; <script>document.write(new Date().getFullYear())</script> MedLink
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const infoStep = document.getElementById('infoStep');
+            const otpStep = document.getElementById('otpStep');
+            const userInfoForm = document.getElementById('userInfoForm');
+            const otpForm = document.getElementById('otpForm');
+            const userPhone = document.getElementById('userPhone');
+            const phoneInput = document.getElementById('phone');
+            const phoneError = document.getElementById('phoneError');
+            const otpInputs = document.querySelectorAll('.otp-input');
+            const otpError = document.getElementById('otpError');
+            const resendOtpBtn = document.getElementById('resendOtp');
+            const otpTimer = document.getElementById('otpTimer');
+            const roleSelect = document.getElementById('role');
+            const nonProfessionalFields = document.getElementById('nonProfessionalFields');
+            const professionalFields = document.getElementById('professionalFields');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // User Menu Elements
+            const accountBtn = document.getElementById('accountBtn');
+            const accountDropdown = document.getElementById('accountDropdown');
+            const userName = document.getElementById('userName');
+            const dropdownUserInfo = document.getElementById('dropdownUserInfo');
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            let countdown;
+            let userData = {};
+            
+            // User Menu Functionality
+            if (accountBtn) {
+                accountBtn.addEventListener('click', function(e) {
+                    accountDropdown.style.display = accountDropdown.style.display === 'block' ? 'none' : 'block';
+                });
+            }
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (accountBtn && accountDropdown && !accountBtn.contains(e.target) && !accountDropdown.contains(e.target)) {
+                    accountDropdown.style.display = 'none';
+                }
+            });
+
+            // Handle logout
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    localStorage.removeItem('medlinkToken');
+                    localStorage.removeItem('medlinkUser');
+                    window.location.href = 'index.html';
+                });
+            }
+
+            // Update UI based on login status
+            function updateUserUI() {
+                const token = localStorage.getItem('medlinkToken');
+                const user = JSON.parse(localStorage.getItem('medlinkUser') || '{}');
+
+                if (token && user) {
+                    // User is logged in
+                    if (userName) {
+                        userName.textContent = user.name || 'Account';
+                        accountBtn.classList.remove('login-btn');
+                    }
+                    if (dropdownUserInfo) {
+                        dropdownUserInfo.innerHTML = `
+                            <p>Welcome, ${user.name || 'User'}</p>
+                            <p class="dropdown-phone">+91 ${user.phone}</p>
+                        `;
+                    }
+                    if (accountDropdown) {
+                        accountDropdown.style.display = 'none';
+                    }
+                } else {
+                    // User is not logged in
+                    if (accountBtn) {
+                        accountBtn.classList.add('login-btn');
+                        accountBtn.innerHTML = 'Login';
+                        accountBtn.addEventListener('click', function() {
+                            window.location.href = 'login.html';
+                        });
+                    }
+                    if (accountDropdown) {
+                        accountDropdown.style.display = 'none';
+                    }
+                }
+            }
+
+            // Update UI on page load
+            updateUserUI();
+            
+            // Handle user info form submission
+            userInfoForm.addEventListener('submit', async function(e) {
+                // Always set required attributes correctly before submit
+                if (roleSelect.value === 'professional') {
+                    document.getElementById('proName').required = true;
+                    document.getElementById('proPassword').required = true;
+                    document.getElementById('phone').required = false;
+                    document.getElementById('name').required = false;
+                    document.getElementById('state').required = false;
+                    document.getElementById('city').required = false;
+                } else {
+                    document.getElementById('proName').required = false;
+                    document.getElementById('proPassword').required = false;
+                    document.getElementById('phone').required = true;
+                    document.getElementById('name').required = true;
+                    document.getElementById('state').required = true;
+                    document.getElementById('city').required = true;
+                }
+                e.preventDefault();
+                if (roleSelect.value === 'professional') {
+                    const proName = document.getElementById('proName').value;
+                    const proPassword = document.getElementById('proPassword').value;
+                    try {
+                        const res = await fetch('/api/professional-login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name: proName, password: proPassword })
+                        });
+                        const data = await res.json();
+                        if (res.ok && data.token) {
+                            localStorage.setItem('medlinkToken', data.token);
+                            localStorage.setItem('medlinkUser', JSON.stringify(data.user));
+                            window.location.href = 'dashboard.html';
+                        } else {
+                            localStorage.removeItem('medlinkToken');
+                            localStorage.removeItem('medlinkUser');
+                            alert(data.error || 'Invalid credentials');
+                            window.location.href = 'index.html';
+                        }
+                    } catch (err) {
+                        alert('Login failed. Please try again.');
+                    }
+                } else {
+                    console.log('OTP flow triggered for normal user');
+                    // Validate phone number
+                    const phone = phoneInput.value.trim();
+                    if (!/^\d{10}$/.test(phone)) {
+                        phoneError.style.display = 'block';
+                        return;
+                    } else {
+                        phoneError.style.display = 'none';
+                    }
+                    
+                    // Collect user data
+                    userData = {
+                        phone: phone,
+                        name: document.getElementById('name').value.trim(),
+                        state: document.getElementById('state').value,
+                        city: document.getElementById('city').value.trim(),
+                        userType: document.getElementById('role').value
+                    };
+                    
+                    // Display phone number in OTP step
+                    userPhone.textContent = `+91 ${userData.phone}`;
+                    
+                    // Send OTP (in a real app this would make an API call)
+                    sendOTP(userData.phone)
+                        .then(() => {
+                            // Switch to OTP step
+                            infoStep.classList.remove('active');
+                            otpStep.classList.add('active');
+                            
+                            // Start timer for resend
+                            startOtpTimer();
+                            
+                            // Focus on first OTP input
+                            otpInputs[0].focus();
+                        })
+                        .catch(error => {
+                            alert("Error sending OTP: " + error.message);
+                        });
+                }
+            });
+            
+            // Handle OTP input auto-tabbing
+            otpInputs.forEach((input, index) => {
+                input.addEventListener('input', function(e) {
+                    // Move to next input if value is entered
+                    if (e.target.value.length === 1 && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                });
+                
+                // Allow backspace to go to previous input
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                });
+            });
+            
+            // Handle OTP form submission
+            otpForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Collect OTP
+                let otp = '';
+                otpInputs.forEach(input => {
+                    otp += input.value;
+                });
+                
+                // Validate OTP (ensure it's 6 digits)
+                if (!/^\d{6}$/.test(otp)) {
+                    otpError.style.display = 'block';
+                    return;
+                } else {
+                    otpError.style.display = 'none';
+                }
+                
+                // Verify OTP (in a real app this would make an API call)
+                verifyOTP(userData.phone, otp)
+                    .then(() => {
+                        // Register user
+                        return registerUser(userData);
+                    })
+                    .then(() => {
+                        // Save user session
+                        localStorage.setItem('medlinkUser', JSON.stringify(userData));
+                        
+                        // Redirect to home
+                        window.location.href = 'index.html';
+                    })
+                    .catch(error => {
+                        otpError.textContent = error.message;
+                        otpError.style.display = 'block';
+                    });
+            });
+            
+            // Handle resend OTP
+            resendOtpBtn.addEventListener('click', function() {
+                if (this.disabled) return;
+                
+                // Resend OTP
+                sendOTP(userData.phone)
+                    .then(() => {
+                        // Reset OTP inputs
+                        otpInputs.forEach(input => {
+                            input.value = '';
+                        });
+                        otpInputs[0].focus();
+                        
+                        // Restart timer
+                        startOtpTimer();
+                    })
+                    .catch(error => {
+                        alert("Error resending OTP: " + error.message);
+                    });
+            });
+            
+            // Start OTP timer (1:30)
+            function startOtpTimer() {
+                let seconds = 90;
+                resendOtpBtn.disabled = true;
+                
+                clearInterval(countdown);
+                countdown = setInterval(() => {
+                    seconds--;
+                    
+                    const mins = Math.floor(seconds / 60);
+                    const secs = seconds % 60;
+                    
+                    otpTimer.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                    
+                    if (seconds <= 0) {
+                        clearInterval(countdown);
+                        otpTimer.textContent = '';
+                        resendOtpBtn.disabled = false;
+                    }
+                }, 1000);
+            }
+            
+            // API mock functions (to be replaced with real API calls)
+            async function sendOTP(phone) {
+                try {
+                    const response = await fetch('/api/send-otp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ phone })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(data.error || 'Failed to send OTP');
+                    }
+                    
+                    return data;
+                } catch (error) {
+                    console.error('Error sending OTP:', error);
+                    throw error;
+                }
+            }
+            
+            async function verifyOTP(phone, otp) {
+                try {
+                    // Collect all user data to send with verification
+                    const userData = {
+                        phone,
+                        otp,
+                        name: document.getElementById('name').value.trim(),
+                        state: document.getElementById('state').value,
+                        city: document.getElementById('city').value.trim(),
+                        userType: document.getElementById('role').value
+                    };
+                    
+                    const response = await fetch('/api/verify-otp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(userData)
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(data.error || 'Failed to verify OTP');
+                    }
+                    
+                    // Save token to localStorage
+                    localStorage.setItem('medlinkToken', data.token);
+                    
+                    return data;
+                } catch (error) {
+                    console.error('Error verifying OTP:', error);
+                    throw error;
+                }
+            }
+            
+            async function registerUser(userData) {
+                // This function is no longer needed as user registration is handled
+                // in the verify-otp endpoint
+                return Promise.resolve();
+            }
+            
+            // Check if user is already logged in
+            const loggedInUser = localStorage.getItem('medlinkUser');
+            if (loggedInUser) {
+                // Redirect to home if already logged in
+                window.location.href = 'index.html';
+            }
+
+            // Handle dynamic form switching
+            roleSelect.addEventListener('change', function() {
+                if (roleSelect.value === 'professional') {
+                    nonProfessionalFields.style.display = 'none';
+                    professionalFields.style.display = 'block';
+                    submitBtn.textContent = 'Login';
+                    // Remove required from hidden fields
+                    document.getElementById('phone').required = false;
+                    document.getElementById('name').required = false;
+                    document.getElementById('state').required = false;
+                    document.getElementById('city').required = false;
+                    document.getElementById('proName').required = true;
+                    document.getElementById('proPassword').required = true;
+                } else {
+                    nonProfessionalFields.style.display = 'block';
+                    professionalFields.style.display = 'none';
+                    submitBtn.textContent = 'Send Verification Code';
+                    // Add required back
+                    document.getElementById('phone').required = true;
+                    document.getElementById('name').required = true;
+                    document.getElementById('state').required = true;
+                    document.getElementById('city').required = true;
+                    document.getElementById('proName').required = false;
+                    document.getElementById('proPassword').required = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
